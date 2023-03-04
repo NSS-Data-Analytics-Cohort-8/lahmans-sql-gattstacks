@@ -17,7 +17,19 @@ ORDER BY year DESC;
 -- 1871 to 2016  
 
 -- 2. Find the name and height of the shortest player in the database. How many games did he play in? What is the name of the team for which he played?
-   
+
+SELECT 
+	p.namefirst,
+	p.namegiven,
+	p.namelast,
+	p.height,
+
+FROM people AS p
+FULL JOIN managershalf AS ms
+USING (playerid)
+FULL JOIN teams AS t
+USING(teamid)
+
 
 -- 3. Find all players in the database who played at Vanderbilt University. Create a list showing each player’s first and last names as well as the total salary they earned in the major leagues. Sort this list in descending order by the total salary earned. Which Vanderbilt player earned the most money in the majors?
 	
@@ -26,6 +38,67 @@ ORDER BY year DESC;
    
 -- 5. Find the average number of strikeouts per game by decade since 1920. Round the numbers you report to 2 decimal places. Do the same for home runs per game. Do you see any trends?
    
+SELECT *
+FROM teams
+ORDER BY yearid DESC;
+
+
+SELECT
+	CASE 
+		WHEN yearid > 1919 AND yearid < 1930
+			THEN
+				ROUND((SUM(so) / COUNT(g)), 2)
+				ROUND((SUM(hr) / COUNT(g)), 2)
+		WHEN yearid > 1929 AND < 1940 
+			THEN
+				ROUND((SUM(so) / COUNT(g)), 2),
+				ROUND((SUM(hr) / COUNT(g)), 2)
+		WHEN yearid > 1939 AND < 1950
+			THEN
+				ROUND((SUM(so) / COUNT(g)), 2),
+				ROUND((SUM(hr) / COUNT(g)), 2)
+		WHEN yearid > 1949 AND < 1960
+			THEN
+				ROUND((SUM(so) / COUNT(g)), 2),
+				ROUND((SUM(hr) / COUNT(g)), 2)
+		WHEN yearid > 1959 AND < 1970
+			THEN
+				ROUND((SUM(so) / COUNT(g)), 2),
+				ROUND((SUM(hr) / COUNT(g)), 2)
+		WHEN yearid > 1969 AND < 1980
+			THEN
+				ROUND((SUM(so) / COUNT(g)), 2),
+				ROUND((SUM(hr) / COUNT(g)), 2)
+		WHEN yearid > 1979 AND < 1990
+			THEN
+				ROUND((SUM(so) / COUNT(g)), 2),
+				ROUND((SUM(hr) / COUNT(g)), 2)
+		WHEN yearid > 1989 AND < 2000
+			THEN
+				ROUND((SUM(so) / COUNT(g)), 2),
+				ROUND((SUM(hr) / COUNT(g)), 2)
+		WHEN yearid > 1999 AND < 2010
+			THEN
+				ROUND((SUM(so) / COUNT(g)), 2),
+				ROUND((SUM(hr) / COUNT(g)), 2)
+		WHEN yearid > 1909 AND < 2020
+			THEN
+				ROUND((SUM(so) / COUNT(g)), 2),
+				ROUND((SUM(hr) / COUNT(g)), 2)
+		END AS decades
+FROM teams;
+
+-- 712 strikeouts per game 
+-- 102 homeruns per game 
+
+SELECT
+  CONCAT(CAST((yearid/10)*10 AS varchar(4)), 's') AS decade,
+  ROUND(AVG(so::numeric)/AVG(g), 2) AS strikeouts_per_game,
+  ROUND(AVG(hr::numeric)/AVG(g), 2) AS home_runs_per_game
+FROM teams
+WHERE yearid >= 1920
+GROUP BY decade
+ORDER BY decade ASC;
 
 -- 6. Find the player who had the most success stealing bases in 2016, where __success__ is measured as the percentage of stolen base attempts which are successful. (A stolen base attempt results either in a stolen base or being caught stealing.) Consider only players who attempted _at least_ 20 stolen bases.
 	
